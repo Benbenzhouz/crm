@@ -1,0 +1,22 @@
+# Backend
+backend/MiniCRM/bin/
+backend/MiniCRM/obj/
+backend/MiniCRM/*.db
+backend/MiniCRM/*.db-shm
+backend/MiniCRM/*.db-wal
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# IDE
+.vscode/
+.vs/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
