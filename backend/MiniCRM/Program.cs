@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using MiniCRM;
 using MiniCRM.Data;
 using MiniCRM.Services;
 
