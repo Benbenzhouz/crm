@@ -57,6 +57,11 @@ export interface Order {
   id: number;
   customerId: number;
   customerName: string;
+  addressId?: number;
+  street?: string;
+  suburb?: string;
+  postcode?: string;
+  state?: string;
   status: string;
   totalAmount: number;
   createdAt: string;
@@ -70,6 +75,7 @@ export interface OrderItemCreate {
 
 export interface OrderCreate {
   customerId: number;
+  addressId?: number;
   items: OrderItemCreate[];
 }
 

@@ -1,4 +1,6 @@
-import type { OrderCreate, OrderItemCreate, Customer, Product } from '../../types';
+import type { OrderCreate, OrderItemCreate, Customer, Product, Address } from '../../types';
+import { useEffect, useState, useRef } from 'react';
+import { addressApi } from '../../addressApi';
 
 interface OrderFormProps {
   formData: OrderCreate;
@@ -10,6 +12,23 @@ interface OrderFormProps {
 }
 
 export default function OrderForm({ formData, customers, products, onFormDataChange, onSubmit, onCancel }: OrderFormProps) {
+  const [addresses, setAddresses] = useState<Address[]>([]);
+  const prevCustomerId = useRef<number | undefined>(undefined);
+
+  useEffect(() => {
+    if (formData.customerId) {
+      addressApi.getByCustomer(formData.customerId)
+        .then(res => setAddresses(res.data))
+        .catch(() => setAddresses([]));
+      // 只有customerId真正变化时才重置addressId
+      if (prevCustomerId.current !== formData.customerId) {
+        onFormDataChange({ ...formData, addressId: undefined });
+        prevCustomerId.current = formData.customerId;
+      }
+    } else {
+      setAddresses([]);
+    }
+  }, [formData.customerId]);
   const addOrderItem = () => {
     onFormDataChange({
       ...formData,
@@ -39,7 +58,7 @@ export default function OrderForm({ formData, customers, products, onFormDataCha
             Select Customer:
             <select
               value={formData.customerId}
-              onChange={(e) => onFormDataChange({ ...formData, customerId: parseInt(e.target.value) })}
+              onChange={(e) => onFormDataChange({ ...formData, customerId: parseInt(e.target.value), addressId: undefined })}
               required
               style={{ marginLeft: '10px', padding: '5px', width: '250px' }}
             >
@@ -52,6 +71,29 @@ export default function OrderForm({ formData, customers, products, onFormDataCha
             </select>
           </label>
         </div>
+
+        {formData.customerId !== 0 && (
+          <div style={{ marginBottom: '15px' }}>
+            <label>
+              Select Address:
+              <select
+                value={formData.addressId || 0}
+                onChange={e => onFormDataChange({ ...formData, addressId: parseInt(e.target.value) })}
+                required
+                style={{ marginLeft: '10px', padding: '5px', width: '350px' }}
+                disabled={addresses.length === 0}
+              >
+                <option value={0}>-- Please select an address --</option>
+                {addresses.map(address => (
+                  <option key={address.id} value={address.id}>
+                    {address.street}, {address.suburb}, {address.state} {address.postcode}
+                  </option>
+                ))}
+              </select>
+            </label>
+            {addresses.length === 0 && <div style={{ color: 'red', marginTop: 4 }}>No addresses for this customer</div>}
+          </div>
+        )}
 
         <h3>Order Items</h3>
         {formData.items.map((item, index) => (

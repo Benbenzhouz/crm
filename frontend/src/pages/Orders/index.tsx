@@ -13,6 +13,7 @@ export default function Orders() {
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState<OrderCreate>({
     customerId: 0,
+    addressId: undefined,
     items: [{ productId: 0, quantity: 1 }],
   });
   const { showToast, ToastContainer } = useToast();
@@ -62,6 +63,10 @@ export default function Orders() {
       showToast({ message: 'Please select a customer', type: 'warning' });
       return;
     }
+    if (!formData.addressId || formData.addressId === 0) {
+      showToast({ message: 'Please select an address', type: 'warning' });
+      return;
+    }
     if (formData.items.some(item => item.productId === 0 || item.quantity <= 0)) {
       showToast({ message: 'Please complete all order item details', type: 'warning' });
       return;
@@ -69,7 +74,7 @@ export default function Orders() {
     try {
       await orderService.create(formData);
       showToast({ message: 'Order created successfully', type: 'success' });
-      setFormData({ customerId: 0, items: [{ productId: 0, quantity: 1 }] });
+  setFormData({ customerId: 0, addressId: undefined, items: [{ productId: 0, quantity: 1 }] });
       setShowForm(false);
       loadOrders();
       loadProducts();

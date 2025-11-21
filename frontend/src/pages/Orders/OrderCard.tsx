@@ -54,6 +54,16 @@ export default function OrderCard({ order, onCancel }: OrderCardProps) {
           <strong>Total: ${order.totalAmount?.toFixed(2) || '0.00'}</strong>
         </div>
       </div>
+      {/* 地址信息新起一行显示 */}
+      {(order.street || order.suburb || order.postcode || order.state) && (
+        <div style={{ fontSize: '14px', color: '#444', marginBottom: '8px', marginLeft: '2px' }}>
+          <span style={{ fontWeight: 500 }}>Address: </span>
+          {order.street || ''}
+          {order.suburb ? `, ${order.suburb}` : ''}
+          {order.postcode ? `, ${order.postcode}` : ''}
+          {order.state ? `, ${order.state}` : ''}
+        </div>
+      )}
       <div style={{ fontSize: '14px', color: '#666', marginBottom: '10px' }}>
         Created: {new Date(order.createdAt).toLocaleString('en-US')}
       </div>
