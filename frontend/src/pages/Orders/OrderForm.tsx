@@ -20,7 +20,7 @@ export default function OrderForm({ formData, customers, products, onFormDataCha
       addressApi.getByCustomer(formData.customerId)
         .then(res => setAddresses(res.data))
         .catch(() => setAddresses([]));
-      // 只有customerId真正变化时才重置addressId
+  // Only reset addressId when customerId actually changes
       if (prevCustomerId.current !== formData.customerId) {
         onFormDataChange({ ...formData, addressId: undefined });
         prevCustomerId.current = formData.customerId;
