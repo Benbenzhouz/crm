@@ -99,6 +99,19 @@ export default function Orders() {
     }
   };
 
+  const handleComplete = async (orderId: number) => {
+    if (!confirm('Are you sure you want to mark this order as completed?')) return;
+    try {
+      await orderService.complete(orderId);
+      showToast({ message: 'Order completed successfully', type: 'success' });
+      loadOrders();
+    } catch (error: any) {
+      console.error('Failed to complete order:', error);
+      const message = error.response?.data?.message || 'Failed to complete order';
+      showToast({ message, type: 'error' });
+    }
+  };
+
   return (
     <>
       <ToastContainer />
@@ -129,6 +142,7 @@ export default function Orders() {
           orders={orders}
           loading={loading}
           onCancel={handleCancel}
+          onComplete={handleComplete}
         />
       </div>
     </>

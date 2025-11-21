@@ -5,9 +5,10 @@ interface OrderListProps {
   orders: Order[];
   loading: boolean;
   onCancel: (orderId: number) => void;
+  onComplete: (orderId: number) => void;
 }
 
-export default function OrderList({ orders, loading, onCancel }: OrderListProps) {
+export default function OrderList({ orders, loading, onCancel, onComplete }: OrderListProps) {
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -17,7 +18,7 @@ export default function OrderList({ orders, loading, onCancel }: OrderListProps)
       <h2>Order List</h2>
       <div>
         {orders.map((order) => (
-          <OrderCard key={order.id} order={order} onCancel={onCancel} />
+          <OrderCard key={order.id} order={order} onCancel={onCancel} onComplete={onComplete} />
         ))}
       </div>
     </div>

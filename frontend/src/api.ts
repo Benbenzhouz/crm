@@ -41,4 +41,5 @@ export const orderApi = {
   getById: (id: number) => api.get<Order>(`/orders/${id}`),
   create: (data: OrderCreate) => api.post<Order>('/orders', data),
   cancel: (id: number) => api.post(`/orders/${id}/cancel`),
+  complete: (id: number) => api.post(`/orders/${id}/complete`),
 };

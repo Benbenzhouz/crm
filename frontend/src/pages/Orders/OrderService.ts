@@ -21,6 +21,10 @@ class OrderService {
     await orderApi.cancel(id);
   }
 
+  async complete(id: number): Promise<void> {
+    await orderApi.complete(id);
+  }
+
   async getCustomers(): Promise<Customer[]> {
     const response = await customerApi.getAll();
     return response.data;

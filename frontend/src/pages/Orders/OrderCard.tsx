@@ -3,9 +3,10 @@ import type { Order } from '../../types';
 interface OrderCardProps {
   order: Order;
   onCancel: (orderId: number) => void;
+  onComplete: (orderId: number) => void;
 }
 
-export default function OrderCard({ order, onCancel }: OrderCardProps) {
+export default function OrderCard({ order, onCancel, onComplete }: OrderCardProps) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'New': return '#4CAF50';
@@ -94,19 +95,34 @@ export default function OrderCard({ order, onCancel }: OrderCardProps) {
         </tbody>
       </table>
       {order.status === 'New' && (
-        <button
-          onClick={() => onCancel(order.id)}
-          style={{
-            padding: '6px 12px',
-            backgroundColor: '#ff9800',
-            color: 'white',
-            border: 'none',
-            cursor: 'pointer',
-            borderRadius: '3px',
-          }}
-        >
-          Cancel Order
-        </button>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button
+            onClick={() => onComplete(order.id)}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: '#4CAF50',
+              color: 'white',
+              border: 'none',
+              cursor: 'pointer',
+              borderRadius: '3px',
+            }}
+          >
+            Complete Order
+          </button>
+          <button
+            onClick={() => onCancel(order.id)}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: '#ff9800',
+              color: 'white',
+              border: 'none',
+              cursor: 'pointer',
+              borderRadius: '3px',
+            }}
+          >
+            Cancel Order
+          </button>
+        </div>
       )}
     </div>
   );
