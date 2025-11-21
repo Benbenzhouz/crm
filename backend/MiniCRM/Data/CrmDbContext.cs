@@ -11,6 +11,7 @@ public class CrmDbContext : DbContext
     public DbSet<Product> Products { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
+    public DbSet<Address> Addresses { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -59,6 +60,20 @@ public class CrmDbContext : DbContext
                 .WithMany()
                 .HasForeignKey(e => e.ProductId)
                 .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // Address configuration
+        modelBuilder.Entity<Address>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Street).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Suburb).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.Postcode).IsRequired().HasMaxLength(20);
+            entity.Property(e => e.State).IsRequired().HasMaxLength(50);
+            entity.HasOne(e => e.Customer)
+                .WithMany(c => c.Addresses)
+                .HasForeignKey(e => e.CustomerId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

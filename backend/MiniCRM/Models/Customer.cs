@@ -7,4 +7,7 @@ public class Customer
     public string Email { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    // Navigation property - One customer can have multiple addresses
+    public ICollection<Address> Addresses { get; set; } = new List<Address>();
 }

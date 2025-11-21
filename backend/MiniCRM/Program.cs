@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MiniCRM;
 using MiniCRM.Data;
 using MiniCRM.Services;
 
@@ -12,6 +13,7 @@ builder.Services.AddDbContext<CrmDbContext>(options =>
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IAddressService, AddressService>();
 
 // Add Controllers
 builder.Services.AddControllers();
