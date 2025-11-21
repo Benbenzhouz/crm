@@ -72,3 +72,29 @@ export interface OrderCreate {
   customerId: number;
   items: OrderItemCreate[];
 }
+
+// Address Types
+export interface Address {
+  id: number;
+  customerId: number;
+  customerName: string;
+  street: string;
+  suburb: string;
+  postcode: string;
+  state: string;
+}
+
+export interface AddressCreate {
+  customerId: number;
+  street: string;
+  suburb: string;
+  postcode: string;
+  state: string;
+}
+
+export interface AddressUpdate {
+  street: string;
+  suburb: string;
+  postcode: string;
+  state: string;
+}
