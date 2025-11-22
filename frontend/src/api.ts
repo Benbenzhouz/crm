@@ -8,6 +8,9 @@ import type {
   ProductUpdate,
   Order,
   OrderCreate,
+  Address,
+  AddressCreate,
+  AddressUpdate,
 } from './types';
 
 const api = axios.create({
@@ -42,4 +45,14 @@ export const orderApi = {
   create: (data: OrderCreate) => api.post<Order>('/orders', data),
   cancel: (id: number) => api.post(`/orders/${id}/cancel`),
   complete: (id: number) => api.post(`/orders/${id}/complete`),
+};
+
+// Address API
+export const addressApi = {
+  getAll: () => api.get<Address[]>('/addresses'),
+  getById: (id: number) => api.get<Address>(`/addresses/${id}`),
+  getByCustomer: (customerId: number) => api.get<Address[]>(`/addresses/customer/${customerId}`),
+  create: (data: AddressCreate) => api.post<Address>('/addresses', data),
+  update: (id: number, data: AddressUpdate) => api.put<Address>(`/addresses/${id}`, data),
+  delete: (id: number) => api.delete(`/addresses/${id}`),
 };

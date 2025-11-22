@@ -1,3 +1,4 @@
+
 using Microsoft.EntityFrameworkCore;
 using MiniCRM.Models;
 
@@ -43,6 +44,10 @@ public class CrmDbContext : DbContext
             entity.HasOne(e => e.Customer)
                 .WithMany()
                 .HasForeignKey(e => e.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne(e => e.Address)
+                .WithMany()
+                .HasForeignKey(e => e.AddressId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
 

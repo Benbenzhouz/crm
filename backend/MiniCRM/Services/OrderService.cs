@@ -18,6 +18,7 @@ public class OrderService : IOrderService
     {
         return await _context.Orders
             .Include(o => o.Customer)
+            .Include(o => o.Address)
             .Include(o => o.OrderItems)
             .ThenInclude(i => i.Product)
             .Select(o => new OrderResponseDto
@@ -25,6 +26,11 @@ public class OrderService : IOrderService
                 Id = o.Id,
                 CustomerId = o.CustomerId,
                 CustomerName = o.Customer != null ? o.Customer.Name : "",
+                AddressId = o.AddressId,
+                Street = o.Address != null ? o.Address.Street : string.Empty,
+                Suburb = o.Address != null ? o.Address.Suburb : string.Empty,
+                Postcode = o.Address != null ? o.Address.Postcode : string.Empty,
+                State = o.Address != null ? o.Address.State : string.Empty,
                 Status = o.Status.ToString(),
                 TotalAmount = o.TotalAmount,
                 CreatedAt = o.CreatedAt,
@@ -45,6 +51,7 @@ public class OrderService : IOrderService
     {
         var order = await _context.Orders
             .Include(o => o.Customer)
+            .Include(o => o.Address)
             .Include(o => o.OrderItems)
             .ThenInclude(i => i.Product)
             .FirstOrDefaultAsync(o => o.Id == id);
@@ -56,6 +63,11 @@ public class OrderService : IOrderService
             Id = order.Id,
             CustomerId = order.CustomerId,
             CustomerName = order.Customer?.Name ?? "",
+            AddressId = order.AddressId,
+            Street = order.Address?.Street ?? string.Empty,
+            Suburb = order.Address?.Suburb ?? string.Empty,
+            Postcode = order.Address?.Postcode ?? string.Empty,
+            State = order.Address?.State ?? string.Empty,
             Status = order.Status.ToString(),
             TotalAmount = order.TotalAmount,
             CreatedAt = order.CreatedAt,
@@ -81,10 +93,21 @@ public class OrderService : IOrderService
             if (customer == null)
                 throw new Exception("Customer not found");
 
+            // Validate address if provided
+            if (dto.AddressId.HasValue)
+            {
+                var address = await _context.Addresses
+                    .FirstOrDefaultAsync(a => a.Id == dto.AddressId.Value && a.CustomerId == dto.CustomerId);
+                if (address == null)
+                    throw new Exception("Address not found or does not belong to the customer");
+            }
+
             // Create order
+
             var order = new Order
             {
                 CustomerId = dto.CustomerId,
+                AddressId = dto.AddressId,
                 Status = OrderStatus.New,
                 CreatedAt = DateTime.UtcNow
             };
@@ -169,5 +192,18 @@ public class OrderService : IOrderService
             await transaction.RollbackAsync();
             throw;
         }
+    }
+
+    public async Task<bool> CompleteAsync(int id)
+    {
+        var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == id);
+        
+        if (order == null) return false;
+        if (order.Status != OrderStatus.New) return false;
+
+        order.Status = OrderStatus.Completed;
+        await _context.SaveChangesAsync();
+
+        return true;
     }
 }

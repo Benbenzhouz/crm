@@ -1,15 +1,40 @@
-import axios from 'axios';
-import type { Address, Customer } from '../../types';
+import { customerApi, addressApi } from '../../api';
+import type { Address, Customer, AddressCreate, AddressUpdate } from '../../types';
 
-const api = axios.create({
-  baseURL: 'http://localhost:5115/api',
-});
+class AddressService {
+  async getAll(): Promise<Address[]> {
+    const response = await addressApi.getAll();
+    return response.data;
+  }
 
-export const addressApi = {
-  getAll: () => api.get<Address[]>('/addresses'),
-  getById: (id: number) => api.get<Address>(`/addresses/${id}`),
-  getCustomers: () => api.get<Customer[]>('/customers'),
-  create: (data: Omit<Address, 'id' | 'customerName'>) => api.post('/addresses', data),
-  update: (id: number, data: Omit<Address, 'id' | 'customerName'>) => api.put(`/addresses/${id}`, data),
-  delete: (id: number) => api.delete(`/addresses/${id}`),
-};
+  async getById(id: number): Promise<Address> {
+    const response = await addressApi.getById(id);
+    return response.data;
+  }
+
+  async create(data: AddressCreate): Promise<Address> {
+    const response = await addressApi.create(data);
+    return response.data;
+  }
+
+  async update(id: number, data: AddressUpdate): Promise<Address> {
+    const response = await addressApi.update(id, data);
+    return response.data;
+  }
+
+  async delete(id: number): Promise<void> {
+    await addressApi.delete(id);
+  }
+
+  async getCustomers(): Promise<Customer[]> {
+    const response = await customerApi.getAll();
+    return response.data;
+  }
+
+  async getByCustomer(customerId: number): Promise<Address[]> {
+    const response = await addressApi.getByCustomer(customerId);
+    return response.data;
+  }
+}
+
+export const addressService = new AddressService();

@@ -9,6 +9,7 @@ public class OrderItemCreateDto
 public class OrderCreateDto
 {
     public int CustomerId { get; set; }
+    public int? AddressId { get; set; }
     public List<OrderItemCreateDto> Items { get; set; } = new();
 }
 
@@ -27,6 +28,11 @@ public class OrderResponseDto
     public int Id { get; set; }
     public int CustomerId { get; set; }
     public string CustomerName { get; set; } = string.Empty;
+    public int? AddressId { get; set; }
+    public string Street { get; set; } = string.Empty;
+    public string Suburb { get; set; } = string.Empty;
+    public string Postcode { get; set; } = string.Empty;
+    public string State { get; set; } = string.Empty;
     public string Status { get; set; } = string.Empty;
     public decimal TotalAmount { get; set; }
     public DateTime CreatedAt { get; set; }
