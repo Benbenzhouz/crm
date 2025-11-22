@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { Product, ProductCreate } from '../../types';
 import { useToast } from '../../hooks/useToast';
+import { useConfirm } from '../../components/ConfirmDialog';
 import { productService } from './ProductService';
 import ProductForm from './ProductForm';
 import ProductList from './ProductList';
@@ -16,6 +17,7 @@ export default function Products() {
     currentStock: 0,
   });
   const { showToast, ToastContainer } = useToast();
+  const confirm = useConfirm();
 
   useEffect(() => {
     loadProducts();
@@ -64,7 +66,7 @@ export default function Products() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Are you sure you want to delete this product?')) return;
+    if (!(await confirm('Are you sure you want to delete this product?'))) return;
     try {
       await productService.delete(id);
       showToast({ message: 'Product deleted successfully', type: 'success' });

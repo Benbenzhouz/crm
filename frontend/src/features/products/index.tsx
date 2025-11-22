@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { productApi } from '../../api';
+import { useConfirm } from '../../components/ConfirmDialog';
 import type { Product, ProductCreate } from '../../types';
 
 export default function Products() {
@@ -12,6 +13,7 @@ export default function Products() {
     unitPrice: 0,
     currentStock: 0,
   });
+  const confirm = useConfirm();
 
   useEffect(() => {
     loadProducts();
@@ -60,7 +62,7 @@ export default function Products() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('确定要删除这个产品吗？')) return;
+    if (!(await confirm('确定要删除这个产品吗？'))) return;
     try {
       await productApi.delete(id);
       alert('产品删除成功');

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useToast } from '../../hooks/useToast';
+import { useConfirm } from '../../components/ConfirmDialog';
 
 const api = axios.create({
   baseURL: 'http://localhost:5115/api',
@@ -35,6 +36,7 @@ export default function Addresses() {
   });
   const [editingId, setEditingId] = useState<number | null>(null);
   const { showToast, ToastContainer } = useToast();
+  const confirm = useConfirm();
 
   useEffect(() => {
     loadData();
@@ -82,7 +84,7 @@ export default function Addresses() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Are you sure you want to delete this address?')) return;
+    if (!(await confirm('Are you sure you want to delete this address?'))) return;
     try {
       await api.delete(`/addresses/${id}`);
       showToast({ message: 'Address deleted successfully', type: 'success' });

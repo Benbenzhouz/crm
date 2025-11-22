@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { orderApi, customerApi, productApi } from '../../api';
+import { useConfirm } from '../../components/ConfirmDialog';
 import type { Order, OrderCreate, OrderItemCreate, Customer, Product } from '../../types';
 
 export default function Orders() {
@@ -12,6 +13,7 @@ export default function Orders() {
     customerId: 0,
     items: [{ productId: 0, quantity: 1 }],
   });
+  const confirm = useConfirm();
 
   useEffect(() => {
     loadOrders();
@@ -74,7 +76,7 @@ export default function Orders() {
   };
 
   const handleCancel = async (orderId: number) => {
-    if (!confirm('确定要取消这个订单吗？库存将会恢复。')) return;
+    if (!(await confirm('确定要取消这个订单吗？库存将会恢复。'))) return;
     try {
       await orderApi.cancel(orderId);
       alert('订单已取消');

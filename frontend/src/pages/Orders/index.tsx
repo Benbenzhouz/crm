@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { Order, OrderCreate, Customer, Product } from '../../types';
 import { useToast } from '../../hooks/useToast';
+import { useConfirm } from '../../components/ConfirmDialog';
 import { orderService } from './OrderService';
 import OrderForm from './OrderForm';
 import OrderList from './OrderList';
@@ -17,6 +18,7 @@ export default function Orders() {
     items: [{ productId: 0, quantity: 1 }],
   });
   const { showToast, ToastContainer } = useToast();
+  const confirm = useConfirm();
 
   useEffect(() => {
     loadOrders();
@@ -86,7 +88,7 @@ export default function Orders() {
   };
 
   const handleCancel = async (orderId: number) => {
-    if (!confirm('Are you sure you want to cancel this order? Stock will be restored.')) return;
+    if (!(await confirm('Are you sure you want to cancel this order? Stock will be restored.'))) return;
     try {
       await orderService.cancel(orderId);
       showToast({ message: 'Order cancelled successfully', type: 'success' });
@@ -100,7 +102,7 @@ export default function Orders() {
   };
 
   const handleComplete = async (orderId: number) => {
-    if (!confirm('Are you sure you want to mark this order as completed?')) return;
+    if (!(await confirm('Are you sure you want to mark this order as completed?'))) return;
     try {
       await orderService.complete(orderId);
       showToast({ message: 'Order completed successfully', type: 'success' });

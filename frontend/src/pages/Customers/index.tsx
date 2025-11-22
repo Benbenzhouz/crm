@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { Customer, CustomerCreate } from '../../types';
 import { useToast } from '../../hooks/useToast';
+import { useConfirm } from '../../components/ConfirmDialog';
 import { customerService } from './CustomerService';
 import CustomerForm from './CustomerForm';
 import CustomerList from './CustomerList';
@@ -15,6 +16,7 @@ export default function Customers() {
     phone: '',
   });
   const { showToast, ToastContainer } = useToast();
+  const confirm = useConfirm();
 
   useEffect(() => {
     loadCustomers();
@@ -62,7 +64,7 @@ export default function Customers() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Are you sure you want to delete this customer?')) return;
+    if (!(await confirm('Are you sure you want to delete this customer?'))) return;
     try {
       await customerService.delete(id);
       showToast({ message: 'Customer deleted successfully', type: 'success' });
