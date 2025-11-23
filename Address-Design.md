@@ -193,3 +193,29 @@ OrderService validates address ownership
 Order.AddressId = dto.AddressId
         ↓
 Query order with Include(Address) to return full address info
+
+
+## 6. Manual Testing (Recommended)
+
+You can verify the address-order linkage via the UI:
+
+1. **Start backend**
+  ```bash
+  cd backend/MiniCRM
+  dotnet run
+  ```
+2. **Start frontend**
+  ```bash
+  cd frontend
+  npm install
+  npm run dev
+  ```
+3. **Navigate to Orders page** in your browser (usually http://localhost:5173)
+4. **Select a customer** — the address dropdown will load that customer's addresses
+5. **Select an address** from the dropdown
+6. **Submit the order**
+
+**Expected results:**
+- UI shows success notification
+- New order contains AddressId
+- Order details show address fields (street, suburb, etc.)
